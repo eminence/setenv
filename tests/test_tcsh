@@ -1,0 +1,20 @@
+#!/usr/bin/env tcsh
+
+alias dotest 'eval `target/debug/examples/test_cd \!*`'
+
+set ORIGPWD=`pwd`
+
+dotest alpha beta "three four"
+set P=`pwd`
+set B=`basename ${P}`
+if ($B == "test_dir_test") then
+    echo "test_tcsh :: OK"
+else
+    echo "test_tcsh :: pwd basename is not as expected :: $B"
+    exit 1
+endif
+
+cd $ORIGPWD
+rmdir setenv_test_dir.*/*
+rmdir setenv_test_dir.*
+

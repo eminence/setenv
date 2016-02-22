@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+
+function dotest() {
+eval `target/debug/examples/test_cd $*` 
+}
+
+
+ORIGPWD=`pwd`
+
+dotest alpha beta "three four"
+P=`pwd`
+B=`basename ${P}`
+if [[ "$B" == "test_dir_test" ]]; then
+    echo "test_zsh :: OK"
+else
+    echo "test_zsh :: pwd basename is not as expected :: $B"
+    exit 1
+fi
+
+cd $ORIGPWD
+rmdir setenv_test_dir.*/*
+rmdir setenv_test_dir.*
+
