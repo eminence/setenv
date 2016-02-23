@@ -10,7 +10,7 @@ use std::io::{Write};
 
 fn main() {
     let args : Vec<String> = args().collect();
-    let mut stderr = std::io::stderr();
+    //let mut stderr = std::io::stderr();
     //for a in &args {
     //    writeln!(stderr, "arg: {:?}", a);
     //}
