@@ -3,26 +3,88 @@
 //! some way to evaluate the output of programs (even Windows), so by returning the right commands
 //! to be eval'd by the parent shell, we can apply these changes.
 //!
+//! # Install
+//!
+//! Add the following to your `Cargo.toml` file:
+//!
+//! ```toml
+//! [dependencies]
+//! setenv = "0.1"
+//! ```
+//!
+//! # Usage
+//!
 //! This library provides two things:
 //!
 //! 1. Some code to try to detect what shell is in use
 //! 2. What syntax is needed to do certain actions.
 //!
-//! At the moment, the only two commands supported are `cd` for changing directories, and `setenv`
-//! for setting environment variables.
+//! At the moment, the only two commands supported are [`cd`] for changing directories, and
+//! [`setenv`] for setting environment variables.
 //!
 //! Two other functions are also provided as a convienence: `split_env` which is just a wrapper
 //! around std::env::split_paths, and `set_env_list` which is a wrapper around
 //! std::env::join_paths.
 //!
+//! # Examples
+//!
+//! To make use of all this, each executable using `setenv` should be wrapped in an
+//! alias/function/bat file.  Here are some examples:
+//!
+//! ## Windows:
+//!
+//! ```text
+//! for /f "tokens=*" %%I in ('d:\target\debug\myapp.exe  %*') do (
+//!   %%I
+//! )
+//! ```
+//!
+//! ### Bash:
+//!
+//! ```c
+//! function dothing() {
+//!   eval `/target/debug/myapp "$@"`
+//! }
+//! ```
+//!
+//! ## Ksh:
+//!
+//! ```text
+//! dothing() {
+//!   eval `/target/debug/myapp "$@"`
+//! }
+//! ```
+//!
+//! ## Zsh:
+//!
+//! ```text
+//! function dothing() {
+//!   eval `/target/debug/myapp $*`
+//! }
+//! ```
+//!
+//! ## Tcsh:
+//!
+//! ```text
+//! alias dothing 'eval `/target/debug/myapp \!*`'
+//! ```
+//!
+//! # Notes
+//!
+//! Since all text send to stdout is eval'd by the shell, great care must be taken to control what
+//! is printed to stdout.  All user-facing messages should go to stderr instead.
+//!
+//! [`cd`]: enum.Shell.html#method.cd
+//! [`setenv`]: enum.Shell.html#method.setenv
 
 use std::ffi::{OsString, OsStr};
 use std::convert::AsRef;
 use std::env::var_os;
 
-
+/// THe types of shells we know about
 pub enum Shell {
     Windows,
+    /// The default if we can't figure out the shell
     Bash,
     Tcsh,
     Zsh,
