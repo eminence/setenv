@@ -1,7 +1,13 @@
 [package]
 name = "setenv"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Andrew Chin <achin@eminence32.net>"]
+description = "Helpers for writing tools that will be eval'd by shells"
+homepage = "https://github.com/eminence/setenv"
+repository = "https://github.com/eminence/setenv"
+readme = "README.md"
+keywords = ["shell", "batch", "bash", "ksh", "zsh"]
+license = "CC0-1.0"
 
-[dependencies]
+[dev-dependencies]
 tempdir = "0.3"
