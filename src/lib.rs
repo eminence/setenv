@@ -81,7 +81,7 @@ use std::ffi::{OsString, OsStr};
 use std::convert::AsRef;
 use std::env::var_os;
 
-/// THe types of shells we know about
+/// The types of shells we know about
 pub enum Shell {
     Windows,
     /// The default if we can't figure out the shell
@@ -133,11 +133,22 @@ pub fn get_shell() -> Shell {
 }
 
 impl Shell {
+    /// Returns the name of this shell
+    pub fn get_name(&self) -> &'static str {
+        match *self {
+            Shell::Windows => "Windows",
+            Shell::Bash => "bash",
+            Shell::Tcsh => "tcsh",
+            Shell::Zsh => "zsh",
+            Shell::Ksh => "ksh"
+        }
+    }
+
     /// Prints to stdout the necessary command to change directory.
     pub fn cd<P: AsRef<OsStr>>(&self, p: P) {
         match *self {
             Shell::Windows => {
-                println!("cd /d {}", p.as_ref().to_string_lossy());
+                println!("cd /d \"{}\"", p.as_ref().to_string_lossy());
             }
             _ => {
                 println!("cd '{}';", p.as_ref().to_string_lossy());
